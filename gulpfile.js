@@ -51,14 +51,13 @@ function styles() {
     .pipe(dest("theme/assets"));
 }
 
+// EDIT CODE BY PHONG
 function stylesToMuchCss() {
-  return (
-    gulp
-      .src("app/styles/*.scss")
-      .pipe(sass())
-      .pipe($.postcss([cssnano({ safe: true, autoprefixer: false })]))
-      .pipe(dest("app/dist"))
-  );
+  return gulp
+    .src("app/styles/*.scss")
+    .pipe(sass())
+    .pipe($.postcss([cssnano({ safe: true, autoprefixer: false })]))
+    .pipe(dest("app/dist"));
 }
 /**============================================================================================== */
 
@@ -617,6 +616,7 @@ function testReload() {
   }
 }
 
+// EDIT CODE BY PHONG
 gulp.task("stylesToMuchCss", function () {
   stylesToMuchCss();
   gulp.watch("app/styles/*.scss", stylesToMuchCss);
