@@ -1,6 +1,8 @@
 $a: #ff0000;
 
+$b: bold;
 body {
-    font-size: 14px;
-    background: $a;    
+  font-size: 14px;
+  background: $a;
+  font-weight: bold;
 }

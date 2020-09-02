@@ -32,6 +32,7 @@ let changeFlag = "",
 const path = require("path");
 const rp = require("request-promise");
 const { resolve } = require("path");
+const { rejects } = require("assert");
 
 /**=========================================================================== STYLE FUNCTION */
 function styles() {
@@ -53,12 +54,12 @@ function styles() {
 }
 
 // EDIT CODE BY PHONG
-function stylesToMuchCss() {
+function stylesToMuchCss(name) {
   return (
     gulp
       // .src("app/styles/*.scss")
-      .src("app/styles/**/*.scss")
-      .pipe(sass())
+      .src(`app/styles/**/${name}.scss`)
+      .pipe(sass().on("error", sass.logError))
       .pipe($.postcss([cssnano({ safe: true, autoprefixer: false })]))
       .pipe(dest("app/dist"))
   );
@@ -374,7 +375,37 @@ async function productionStyles(_minify) {
 
   let task_3 = updateLayout("production");
 
-  let task_4 = stylesToMuchCss();
+  // EDIT CODE BY PHONG
+  // let task_4 = stylesToMuchCss();
+
+  let task_4 = new Promise((resolve, reject) => {
+    fs.readFile(
+      "./app/styles/fileCompile.txt",
+      { encoding: "utf8" },
+      (err, data) => {
+        if (!err) {
+          const listName = data;
+
+          listName.split(", ").forEach((nameIsNotCustom) => {
+            if (nameIsNotCustom) {
+              name = nameIsNotCustom.replace(/\s+/g, "");
+              stylesToMuchCss(name);
+            } else {
+              stylesToMuchCss("*");
+            }
+          });
+          resolve({
+            status: "success",
+          });
+        } else {
+          resolve({
+            status: "error",
+            msg: err.message,
+          });
+        }
+      }
+    );
+  });
 
   let allTasks = await Promise.all([task_1, task_2, task_3, task_4]);
 
