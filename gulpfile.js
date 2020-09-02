@@ -31,6 +31,7 @@ let changeFlag = "",
   firstBuild = true;
 const path = require("path");
 const rp = require("request-promise");
+const { resolve } = require("path");
 
 /**=========================================================================== STYLE FUNCTION */
 function styles() {
@@ -53,11 +54,14 @@ function styles() {
 
 // EDIT CODE BY PHONG
 function stylesToMuchCss() {
-  return gulp
-    .src("app/styles/*.scss")
-    .pipe(sass())
-    .pipe($.postcss([cssnano({ safe: true, autoprefixer: false })]))
-    .pipe(dest("app/dist"));
+  return (
+    gulp
+      // .src("app/styles/*.scss")
+      .src("app/styles/**/*.scss")
+      .pipe(sass())
+      .pipe($.postcss([cssnano({ safe: true, autoprefixer: false })]))
+      .pipe(dest("app/dist"))
+  );
 }
 /**============================================================================================== */
 
@@ -370,7 +374,9 @@ async function productionStyles(_minify) {
 
   let task_3 = updateLayout("production");
 
-  let allTasks = await Promise.all([task_1, task_2, task_3]);
+  let task_4 = stylesToMuchCss();
+
+  let allTasks = await Promise.all([task_1, task_2, task_3, task_4]);
 
   // Deploy files to Shopify store
   let commandString = "cd theme/ && theme deploy ";
