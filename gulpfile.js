@@ -55,14 +55,11 @@ function styles() {
 
 // EDIT CODE BY PHONG
 function stylesToMuchCss(name) {
-  return (
-    gulp
-      // .src("app/styles/*.scss")
-      .src(`app/styles/**/${name}.scss`)
-      .pipe(sass().on("error", sass.logError))
-      .pipe($.postcss([cssnano({ safe: true, autoprefixer: false })]))
-      .pipe(dest("app/dist"))
-  );
+  return gulp
+    .src(`app/styles/**/${name}.scss`)
+    .pipe(sass().on("error", sass.logError))
+    .pipe($.postcss([cssnano({ safe: true, autoprefixer: false })]))
+    .pipe(dest("app/dist"));
 }
 /**============================================================================================== */
 
@@ -385,8 +382,9 @@ async function productionStyles(_minify) {
       (err, data) => {
         if (!err) {
           const listName = data;
+          console.log("listName", listName);
 
-          listName.split(", ").forEach((nameIsNotCustom) => {
+          listName.split(",").forEach((nameIsNotCustom) => {
             if (nameIsNotCustom) {
               name = nameIsNotCustom.replace(/\s+/g, "");
               stylesToMuchCss(name);
